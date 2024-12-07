@@ -86,14 +86,30 @@ function applyFilters() {
     }
 
     // Apply the filter by class
-    const subject = row.cells[1].querySelector(".item-div");
-    if (
-      filterClass !== "all" &&
-      subject &&
-      !subject.textContent.includes(filterClass)
-    ) {
-      showRow = false; // Hide row if subject doesn't match
-    }
+    const subjectCells = Array.from(classCells); // All cells excluding time
+    subjectCells.forEach((cell) => {
+      const subjectDivs = cell.querySelectorAll(".item-div"); // All subject divs in the cell
+      let anySubjectVisible = false; // Flag to check if at least one subject is visible
+
+      // Loop through all subjects in the cell and only show the matching subject
+      subjectDivs.forEach((subjectDiv) => {
+        const subjectText = subjectDiv.textContent;
+
+        if (filterClass === "all" || subjectText.includes(filterClass)) {
+          subjectDiv.style.display = ""; // Show this subject if it matches
+          anySubjectVisible = true; // Mark that we have at least one matching subject
+        } else {
+          subjectDiv.style.display = "none"; // Hide this subject if it doesn't match
+        }
+      });
+
+      // If no subject is displayed in the cell, hide the cell
+      if (!anySubjectVisible) {
+        cell.style.display = "none"; // Hide the entire cell if no subject is displayed
+      } else {
+        cell.style.display = ""; // Show the cell if at least one subject is displayed
+      }
+    });
 
     // Loop through each day cell in the row and check if it contains content for the selected day
     classCells.forEach((cell, index) => {
@@ -213,11 +229,11 @@ function addTimetableEntry(
       if (cellContent) {
         targetRow.cells[
           dayIndex
-        ].innerHTML += `<br><div class="item-div ${groupBackgroundColor}">${subject} ${salle} (${instructor})</div>`;
+        ].innerHTML += `<br><div class="item-div ${groupBackgroundColor}">${subject} (${instructor}) ${salle}</div>`;
       } else {
         targetRow.cells[
           dayIndex
-        ].innerHTML = `<div class="item-div ${groupBackgroundColor}">${subject} ${salle} (${instructor})</div>`;
+        ].innerHTML = `<div class="item-div ${groupBackgroundColor}">${subject} (${instructor})  ${salle}</div>`;
       }
     });
   } else {
@@ -228,7 +244,7 @@ function addTimetableEntry(
       const dayIndex = getDayIndex(day);
       newRow.cells[
         dayIndex
-      ].innerHTML = `<div class="item-div ${groupBackgroundColor}">${subject} ${salle} (${instructor})</div>`;
+      ].innerHTML = `<div class="item-div ${groupBackgroundColor}">${subject}  (${instructor}) ${salle}</div>`;
     });
 
     insertSortedRow(newRow, startTime, timetableBody);
