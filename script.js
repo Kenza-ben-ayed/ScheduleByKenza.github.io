@@ -45,6 +45,88 @@ const usedGradients = new Set();
 // Store already existing subjects with time and salle
 const existingSubjects = [];
 
+// Print Button Functionality
+document.getElementById("print-button").addEventListener("click", function () {
+  const printWindow = window.open("", "", "width=800,height=600");
+  const timetableContent = document.querySelector("#timetable").outerHTML;
+
+  printWindow.document.write(`
+          <html>
+            <head>
+             <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
+   
+         
+               <style>
+               .case-time {
+  color: #546e7a;
+  background-color: #eceff1;
+  padding :10;
+}
+.timetable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.timetable th,
+.timetable td {
+  padding: 12px;
+  text-align: center;
+  border: 1px solid #ddd;
+}
+
+.timetable th {
+  background-color: #ffffff;
+  color: #546e7a;
+  font-weight: 500;
+}
+
+
+.container {
+  background-color: #ffffff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  width: 100%;
+  height: fit-content;
+}
+ .item-div {
+  color: black;
+  border: 1px solid black;
+   padding: 5px 10px;
+}
+  /* Reset all default margins, paddings, and set box-sizing */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Body Styling */
+body {
+  font-family: "Poppins", sans-serif; /* Set Poppins as default font */
+  background-color: #eceff1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+
+}</style>
+            </head>
+            <body>
+         
+              ${timetableContent}
+            </body>
+          </html>
+        `);
+
+  printWindow.document.close();
+  printWindow.print();
+});
+
 // Listen for the change event on the filter dropdowns
 document.getElementById("filter-day").addEventListener("change", applyFilters);
 document.getElementById("filter-time").addEventListener("change", applyFilters);
@@ -229,11 +311,11 @@ function addTimetableEntry(
       if (cellContent) {
         targetRow.cells[
           dayIndex
-        ].innerHTML += `<br><div class="item-div ${groupBackgroundColor}">${subject} (${instructor}) ${salle}</div>`;
+        ].innerHTML += `<br><div class="item-div ${groupBackgroundColor}"><label class="subject-name">${subject} (${instructor})</label><br><label class="subject-salle"> ${salle}</label></div>`;
       } else {
         targetRow.cells[
           dayIndex
-        ].innerHTML = `<div class="item-div ${groupBackgroundColor}">${subject} (${instructor})  ${salle}</div>`;
+        ].innerHTML = `<div class="item-div ${groupBackgroundColor}"><label class="subject-name">${subject} (${instructor})</label> <br><label class="subject-salle"> ${salle}</label></div>`;
       }
     });
   } else {
@@ -244,7 +326,7 @@ function addTimetableEntry(
       const dayIndex = getDayIndex(day);
       newRow.cells[
         dayIndex
-      ].innerHTML = `<div class="item-div ${groupBackgroundColor}">${subject}  (${instructor}) ${salle}</div>`;
+      ].innerHTML = `<div class="item-div ${groupBackgroundColor}"><label class="subject-name">${subject}  (${instructor})</label> <label class="subject-salle">${salle}</label></div>`;
     });
 
     insertSortedRow(newRow, startTime, timetableBody);
@@ -309,10 +391,11 @@ function getUniqueGradientColor() {
   // List of available gradient class names
   const gradientClasses = [
     "accent-pink-gradient",
+    "accent-blue-gradient",
     "accent-orange-gradient",
     "accent-green-gradient",
     "accent-cyan-gradient",
-    "accent-blue-gradient",
+
     "accent-purple-gradient",
   ];
 
