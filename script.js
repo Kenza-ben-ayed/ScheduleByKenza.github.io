@@ -54,10 +54,7 @@ document
 
 function applyFilters() {
   const filterDay = document.getElementById("filter-day").value;
-  const selectedClasses = Array.from(
-    document.querySelectorAll(".filter-class:checked")
-  ).map((checkbox) => checkbox.value);
-  // Get the timetable header cells
+
   const headerCells = document.querySelectorAll("#timetable thead th");
 
   // Loop through each header cell to show/hide based on the selected day filter
