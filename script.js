@@ -45,7 +45,7 @@ const usedGradients = new Set();
 // Store already existing subjects with time and salle
 const existingSubjects = [];
 
-// Listen for the change event on the filter-day dropdown
+// Listen for the change event on the filter dropdowns
 document.getElementById("filter-day").addEventListener("change", applyFilters);
 document.getElementById("filter-time").addEventListener("change", applyFilters);
 document
@@ -54,6 +54,8 @@ document
 
 function applyFilters() {
   const filterDay = document.getElementById("filter-day").value;
+  const filterTime = document.getElementById("filter-time").value;
+  const filterClass = document.getElementById("filter-class").value;
 
   const headerCells = document.querySelectorAll("#timetable thead th");
 
@@ -78,6 +80,21 @@ function applyFilters() {
     const classCells = Array.from(row.cells).slice(1); // All day columns
     let showRow = true;
 
+    // Apply the filter by time
+    if (filterTime !== "all" && !timeCell.includes(filterTime)) {
+      showRow = false; // Hide row if time doesn't match
+    }
+
+    // Apply the filter by class
+    const subject = row.cells[1].querySelector(".item-div");
+    if (
+      filterClass !== "all" &&
+      subject &&
+      !subject.textContent.includes(filterClass)
+    ) {
+      showRow = false; // Hide row if subject doesn't match
+    }
+
     // Loop through each day cell in the row and check if it contains content for the selected day
     classCells.forEach((cell, index) => {
       const dayName = headerCells[index + 1].getAttribute("data-day"); // Get the day name from the header
@@ -89,9 +106,11 @@ function applyFilters() {
     });
 
     // If all day cells for the selected day are empty, hide the row
-    showRow = classCells.some(
-      (cell) => cell.style.display === "" && cell.textContent.trim() !== ""
-    );
+    showRow =
+      showRow &&
+      classCells.some(
+        (cell) => cell.style.display === "" && cell.textContent.trim() !== ""
+      );
 
     row.style.display = showRow ? "table-row" : "none";
   });
