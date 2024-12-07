@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Timetable</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
+    <script
+      src="https://kit.fontawesome.com/8b96b95570.js"
+      crossorigin="anonymous"
+    ></script>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1 class="title" id="page-title">Timetable Generator</h1>
+      <!-- Button to open modal -->
+
+      <div class="filter-container">
+        <label for="filter-day">Filter by Day:</label>
+        <select id="filter-day">
+          <option value="all">All</option>
+          <option value="Monday">Monday</option>
+          <option value="Tuesday">Tuesday</option>
+          <option value="Wednesday">Wednesday</option>
+          <option value="Thursday">Thursday</option>
+          <option value="Friday">Friday</option>
+          <option value="Saturday">Saturday</option>
+          <option value="Sunday">Sunday</option>
+        </select>
+
+        <label for="filter-time">Filter by Time:</label>
+
+        <select id="filter-time">
+          <option value="all">All</option>
+
+          <!-- here more time will be added -->
+        </select>
+
+        <label for="filter-class">Filter by Class:</label>
+        <select id="filter-class">
+          <option value="all">All</option>
+
+          <!-- Add more subjects here -->
+        </select>
+        <button class="btn add-button" id="open-modal-btn">
+          <i class="fa-solid fa-plus"></i>add Subject
+        </button>
+      </div>
+
+      <!-- Modal Structure -->
+      <div class="modal" id="modal">
+        <div class="modal-content">
+          <form id="timetable-form">
+            <div class="form-group">
+              <label for="subject">Subject:</label>
+              <select id="subject" required></select>
+            </div>
+            <div class="form-group">
+              <label for="instructor">Instructor:</label>
+              <select id="instructor" required></select>
+            </div>
+            <div class="form-group">
+              <label for="salle">Salle:</label>
+              <select id="salle" required></select>
+            </div>
+            <div class="form-group">
+              <label for="start-time">Start Time:</label>
+              <input type="time" id="start-time" required />
+            </div>
+            <div class="form-group">
+              <label for="end-time">End Time:</label>
+              <input type="time" id="end-time" required />
+            </div>
+            <div class="form-group">
+              <label for="days">Days:</label>
+              <div id="days" class="checkbox-group">
+                <label><input type="checkbox" value="Monday" /> Monday</label>
+                <label><input type="checkbox" value="Tuesday" /> Tuesday</label>
+                <label
+                  ><input type="checkbox" value="Wednesday" /> Wednesday</label
+                >
+                <label
+                  ><input type="checkbox" value="Thursday" /> Thursday</label
+                >
+                <label><input type="checkbox" value="Friday" /> Friday</label>
+                <label
+                  ><input type="checkbox" value="Saturday" /> Saturday</label
+                >
+                <label><input type="checkbox" value="Sunday" /> Sunday</label>
+              </div>
+            </div>
+            <button type="submit" class="btn">Add to Timetable</button>
+          </form>
+        </div>
+      </div>
+
+      <table id="timetable" class="timetable">
+        <thead>
+          <tr>
+            <th>Time</th>
+            <th data-day="Monday">Monday</th>
+            <th data-day="Tuesday">Tuesday</th>
+            <th data-day="Wednesday">Wednesday</th>
+            <th data-day="Thursday">Thursday</th>
+            <th data-day="Friday">Friday</th>
+            <th data-day="Saturday">Saturday</th>
+            <th data-day="Sunday">Sunday</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <script>
+      // Get the current month and update the <h1> title
+      document.addEventListener("DOMContentLoaded", function () {
+        const months = [
+          "January",
+          "February",
+          "March",
+          "April",
+          "May",
+          "June",
+          "July",
+          "August",
+          "September",
+          "October",
+          "November",
+          "December",
+        ];
+        const currentMonth = months[new Date().getMonth()];
+        document.getElementById(
+          "page-title"
+        ).textContent = `${currentMonth} Timetable`;
+      });
+    </script>
+    <script src="script.js"></script>
+  </body>
+</html>

@@ -1,0 +1,284 @@
+/* Base Color Variables */
+:root {
+  --accent-base: #8eeec0;
+  --cutty-sark: #546e7a;
+  --porcelain: #eceff1;
+  --accent-pink: hsl(180, 100%, 74%);
+  --accent-orange: hsl(240, 100%, 74%);
+  --accent-green: hsl(120, 100%, 74%);
+  --accent-cyan: var(--accent-base);
+  --accent-blue: hsl(60, 100%, 74%);
+  --accent-purple: hsl(300, 100%, 74%);
+}
+
+/* Function to Create Gradients */
+@keyframes make-gradient {
+  0% {
+    background: linear-gradient(135deg, var(--accent-cyan), hsl(40, 100%, 74%));
+  }
+  100% {
+    background: linear-gradient(135deg, var(--accent-cyan), hsl(40, 100%, 74%));
+  }
+}
+
+/* Mixin for Creating Accent Gradient Tiles */
+.accent-pink-gradient,
+.accent-orange-gradient,
+.accent-green-gradient,
+.accent-cyan-gradient,
+.accent-blue-gradient,
+.accent-purple-gradient {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  transition: 0.2s ease box-shadow, 0.2s ease transform;
+}
+
+.accent-pink-gradient {
+  background: linear-gradient(135deg, var(--accent-pink), hsl(220, 100%, 74%));
+}
+
+.accent-orange-gradient {
+  background: linear-gradient(
+    135deg,
+    var(--accent-orange),
+    hsl(180, 100%, 74%)
+  );
+}
+
+.accent-green-gradient {
+  background: linear-gradient(135deg, var(--accent-green), hsl(120, 100%, 74%));
+}
+
+.accent-cyan-gradient {
+  background: linear-gradient(135deg, var(--accent-cyan), hsl(40, 100%, 74%));
+}
+
+.accent-blue-gradient {
+  background: linear-gradient(135deg, var(--accent-blue), hsl(80, 100%, 74%));
+}
+
+.accent-purple-gradient {
+  background: linear-gradient(
+    135deg,
+    var(--accent-purple),
+    hsl(340, 100%, 74%)
+  );
+}
+
+/* Hover Effect */
+.accent-pink-gradient:hover,
+.accent-orange-gradient:hover,
+.accent-green-gradient:hover,
+.accent-cyan-gradient:hover,
+.accent-blue-gradient:hover,
+.accent-purple-gradient:hover {
+  box-shadow: 0 20px 30px 0 rgba(142, 238, 192, 0.7); /* Adjusted transparentize effect */
+  transform: scale(1.05);
+}
+/* Reset all default margins, paddings, and set box-sizing */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Body Styling */
+body {
+  font-family: "Poppins", sans-serif; /* Set Poppins as default font */
+  background-color: #eceff1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  padding: 20px;
+}
+.item-div {
+  padding: 10px;
+  color: white;
+  border-radius: 4px;
+  text-align: center;
+  margin-bottom: 5px;
+}
+.filter-container {
+  margin-bottom: 20px;
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.filter-container label {
+  font-weight: bold;
+}
+
+.filter-container select {
+  padding: 5px;
+  font-size: 16px;
+  width: fit-content;
+}
+/* Main Container */
+.container {
+  background-color: #ffffff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+}
+
+/* Title Styling */
+.title {
+  font-size: 2rem;
+  text-align: center;
+  margin-bottom: 20px;
+  color: #546e7a;
+}
+
+/* Form Group Styling */
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 500;
+  color: #546e7a;
+}
+#class-search {
+  padding: 5px;
+  margin-bottom: 10px;
+  width: 200px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+#filter-class-container {
+  margin-bottom: 20px;
+  margin-top: 10px;
+}
+
+#filter-class-container label {
+  display: block;
+  margin: 5px 0;
+}
+
+/* Input and Button Styles */
+input[type="text"],
+input[type="time"],
+.btn {
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  font-size: 1rem;
+
+  font-family: "Poppins", sans-serif; /* Set Poppins as default font */
+}
+
+input[type="checkbox"] {
+  margin-right: 10px;
+}
+
+/* Checkbox Group Styling */
+.checkbox-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* Styling for select elements */
+select {
+  width: 100%;
+  padding: 12px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  font-size: 1rem;
+  background-color: #f9f9f9;
+  color: #333;
+  transition: all 0.3s ease-in-out;
+}
+
+select:focus {
+  border-color: #4caf50;
+  outline: none;
+  box-shadow: 0 0 8px rgba(76, 175, 80, 0.3);
+}
+/* Button Styling */
+.btn {
+  background-color: #0ab98e;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  margin-top: 10px;
+  width: fit-content;
+}
+.btn i {
+  margin-right: 5px;
+}
+
+.btn:hover {
+  background-color: #088364;
+}
+
+.timetable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.timetable th,
+.timetable td {
+  padding: 12px;
+  text-align: center;
+  border: 1px solid #ddd;
+}
+
+.timetable th {
+  background-color: #ffffff;
+  color: #546e7a;
+  font-weight: 500;
+}
+
+.timetable tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.timetable tr:hover {
+  background-color: #ddd;
+}
+/* Modal Styles */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4); /* Semi-transparent background */
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Ensure modal is above all other elements */
+}
+.case-time {
+  color: #546e7a;
+  background-color: #eceff1;
+}
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 80%;
+  max-width: 500px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Modal Close Behavior */
+.modal-content {
+  position: relative;
+  z-index: 1;
+}
+
+.modal.show {
+  display: flex;
+  opacity: 1;
+}
