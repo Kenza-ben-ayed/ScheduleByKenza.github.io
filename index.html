@@ -46,6 +46,12 @@
 
           <!-- Add more subjects here -->
         </select>
+        <label for="filter-instructor">Filter by Instructor:</label>
+        <select id="filter-instructor">
+          <option value="all">All</option>
+
+          <!-- Add more subjects here -->
+        </select>
         <button class="btn add-button" id="open-modal-btn">
           <i class="fa-solid fa-plus"></i>add Subject
         </button>
@@ -100,6 +106,78 @@
               Add to Timetable
             </button>
           </form>
+        </div>
+      </div>
+      <!-- Modal Structure -->
+      <div class="modaledit" id="modaledit">
+        <div class="modal-content2">
+          <!-- Existing form fields -->
+
+          <!-- Edit and Delete buttons -->
+          <button
+            type="button"
+            class="btn edit-button"
+            id="edit-button"
+            style="width: 100%"
+          >
+            Edit Class
+          </button>
+          <button
+            type="button"
+            class="btn delete-button"
+            id="delete-button"
+            style="width: 100%"
+          >
+            Delete Class
+          </button>
+        </div>
+      </div>
+      <!-- Modal Structure -->
+      <div class="modaledit" id="modaleditsubject">
+        <div class="modal-content2">
+          <!-- Existing form fields -->
+
+          <h2>Edit Timetable Entry</h2>
+          <div class="form-group3">
+            <label class="subject-name" id="subjet-edit-name"></label>
+            <label class="subject-salle" id="subjet-edit-salle"></label>
+          </div>
+          <div class="form-group">
+            <div class="form-group">
+              <label for="edit-salle">Salle:</label>
+              <select id="edit-salle" required></select>
+            </div>
+            <label for="edit-start-time">Start Time:</label>
+            <input type="time" id="edit-start-time" required />
+            <label for="edit-end-time">End Time:</label>
+            <input type="time" id="edit-end-time" required />
+          </div>
+          <div class="form-group">
+            <label for="edit-days">Days:</label>
+            <div id="edit-days" class="checkbox-group">
+              <label><input type="checkbox" value="Monday" /> Monday</label>
+              <label><input type="checkbox" value="Tuesday" /> Tuesday</label>
+              <label
+                ><input type="checkbox" value="Wednesday" /> Wednesday</label
+              >
+              <label><input type="checkbox" value="Thursday" /> Thursday</label>
+              <label><input type="checkbox" value="Friday" /> Friday</label>
+              <label><input type="checkbox" value="Saturday" /> Saturday</label>
+              <label><input type="checkbox" value="Sunday" /> Sunday</label>
+            </div>
+          </div>
+          <div class="form-group2">
+            <button type="button" class="btn save-button" id="save-edit-button">
+              Save Changes
+            </button>
+            <button
+              type="button"
+              class="btn delete-button"
+              id="cancel-edit-button"
+            >
+              Cancel
+            </button>
+          </div>
         </div>
       </div>
 

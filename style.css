@@ -107,10 +107,16 @@ body {
   justify-content: center;
   margin-bottom: 5px;
   flex-direction: column;
+  cursor: pointer;
+  height: fit-content;
+  align-self: center;
 }
 .subject-name {
   font-weight: bold;
   font-size: 1.25rem;
+}
+.name {
+  flex-direction: row;
 }
 .subject-salle {
   font-size: 1rem;
@@ -154,6 +160,24 @@ body {
 /* Form Group Styling */
 .form-group {
   margin-bottom: 15px;
+}
+.form-group3 {
+  margin-top: 15px;
+  margin-bottom: 15px;
+  align-items: center;
+  justify-content: center;
+  display: grid;
+  text-align: center;
+}
+.form-group2 {
+  margin-top: 15px;
+  margin-bottom: 15px;
+  align-items: center;
+  justify-content: space-evenly;
+  display: flex;
+}
+.form-group3 .subject-name {
+  color: #32f3fa;
 }
 
 .form-group label {
@@ -242,6 +266,18 @@ select:focus {
   color: #fff;
   width: fit-content;
 }
+.delete-button:hover {
+  background-color: #ff000d;
+  color: #fff;
+}
+.edit-button:hover {
+  background-color: #32f3fa;
+  color: #fff;
+}
+.save-button:hover {
+  background-color: #00ff2a;
+  color: #fff;
+}
 
 .print-button {
   background-color: white;
@@ -301,6 +337,18 @@ select:focus {
   align-items: center;
   z-index: 1000; /* Ensure modal is above all other elements */
 }
+.modaledit {
+  display: none; /* Hidden by default */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4); /* Semi-transparent background */
+  z-index: 1000; /* Ensure modal is above all other elements */
+  justify-content: center;
+  align-items: center;
+}
 .case-time {
   color: #546e7a;
   background-color: #eceff1;
@@ -319,6 +367,25 @@ select:focus {
 .modal-content {
   position: relative;
   z-index: 1;
+}
+.modal-content2 {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 80%;
+  max-width: 500px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+  height: fit-content;
+  text-align: center;
+}
+.modal-content2 input {
+  margin-bottom: 10px;
+}
+/* Modal Close Behavior */
+.modal-content2 {
+  position: relative;
+  z-index: 1;
+  justify-content: center;
 }
 
 .modal.show {

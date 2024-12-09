@@ -1,17 +1,76 @@
-document
-  .getElementById("open-modal-btn")
-  .addEventListener("click", function () {
-    document.getElementById("modal").style.display = "flex"; // Show modal
+document.addEventListener("DOMContentLoaded", function () {
+  let selectedItem = null;
+
+  // Open "Add Subject" modal
+  document
+    .getElementById("open-modal-btn")
+    .addEventListener("click", function () {
+      document.getElementById("modal").style.display = "flex"; // Show modal
+    });
+
+  // Close the "Add Subject" modal when clicking outside
+  document.getElementById("modal").addEventListener("click", function (event) {
+    if (event.target === this) {
+      document.getElementById("modal").style.display = "none"; // Close modal
+    }
   });
 
-document.getElementById("modal").addEventListener("click", function (event) {
-  // Close modal when clicking outside of the form (i.e., on the background)
-  if (event.target === this) {
-    document.getElementById("modal").style.display = "none";
-  }
-});
+  // Add click event to each subject div for opening the edit modal
+  document.querySelectorAll(".item-div").forEach((item) => {
+    item.addEventListener("click", function () {
+      console.log(item.id);
+      selectedItem = item; // Set the selected item to the clicked div
 
-document.addEventListener("DOMContentLoaded", function () {
+      // Pre-fill the modal fields with the selected subject's data
+      const subjectName = item.querySelector(".subject-name").textContent;
+      const subjectSalle = item.querySelector(".subject-salle").textContent;
+
+      // Fill the modal inputs
+      // document.getElementById("subject").value = subjectName;
+      // document.getElementById("salle").value = subjectSalle;
+
+      // Display the "Edit Modal"
+      document.getElementById("modaledit").style.display = "flex";
+    });
+  });
+
+  // Close "Edit Modal" when clicking outside
+  document
+    .getElementById("modaledit")
+    .addEventListener("click", function (event) {
+      if (event.target === this) {
+        document.getElementById("modaledit").style.display = "none"; // Close modal
+      }
+    });
+
+  // Handle Edit Button click to update the selected item
+  document.getElementById("edit-button").addEventListener("click", function () {
+    if (!selectedItem) return; // No item selected
+
+    const newSubject = document.getElementById("subject").value;
+    const newSalle = document.getElementById("salle").value;
+
+    // Update the subject name and salle in the selected item
+    selectedItem.querySelector(".subject-name").textContent = newSubject;
+    selectedItem.querySelector(".subject-salle").textContent = newSalle;
+
+    // Close the edit modal
+    document.getElementById("modaledit").style.display = "none";
+  });
+
+  // Handle Delete Button click to remove the selected item
+  document
+    .getElementById("delete-button")
+    .addEventListener("click", function () {
+      if (!selectedItem) return; // No item selected
+
+      // Remove the selected item from the timetable
+      selectedItem.remove();
+
+      // Close the edit modal
+      document.getElementById("modaledit").style.display = "none";
+    });
+
   // Define the options for each dropdown
   const subjects = ["French", "English", "German", "Italian", "Spanish"];
   const instructors = ["MHB", "AN", "HM"];
@@ -21,6 +80,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const subjectSelect = document.getElementById("subject");
   const instructorSelect = document.getElementById("instructor");
   const salleSelect = document.getElementById("salle");
+  const editsalleSelect = document.getElementById("edit-salle");
 
   // Function to populate a select element with options
   function populateSelect(selectElement, options) {
@@ -37,6 +97,7 @@ document.addEventListener("DOMContentLoaded", function () {
   populateSelect(subjectSelect, subjects);
   populateSelect(instructorSelect, instructors);
   populateSelect(salleSelect, salles);
+  populateSelect(editsalleSelect, salles);
 });
 
 // Store already assigned gradient classes
@@ -71,9 +132,14 @@ document.getElementById("print-button").addEventListener("click", function () {
   margin-top: 20px;
 }
 
-.timetable th,
-.timetable td {
+.timetable th {
   padding: 12px;
+  text-align: center;
+  border: 1px solid #ddd;
+}
+
+.timetable td {
+
   text-align: center;
   border: 1px solid #ddd;
 }
@@ -133,11 +199,15 @@ document.getElementById("filter-time").addEventListener("change", applyFilters);
 document
   .getElementById("filter-class")
   .addEventListener("change", applyFilters);
+document
+  .getElementById("filter-instructor")
+  .addEventListener("change", applyFilters);
 
 function applyFilters() {
   const filterDay = document.getElementById("filter-day").value;
   const filterTime = document.getElementById("filter-time").value;
   const filterClass = document.getElementById("filter-class").value;
+  const filterInstructor = document.getElementById("filter-instructor").value;
 
   const headerCells = document.querySelectorAll("#timetable thead th");
 
@@ -154,7 +224,7 @@ function applyFilters() {
     }
   });
 
-  // Now apply the row filters as well (based on the selected day, time, or class)
+  // Now apply the row filters as well (based on the selected day, time, class, or instructor)
   const timetableRows = document.querySelectorAll("#timetable tbody tr");
 
   timetableRows.forEach((row) => {
@@ -167,7 +237,7 @@ function applyFilters() {
       showRow = false; // Hide row if time doesn't match
     }
 
-    // Apply the filter by class
+    // Apply the filter by instructor (new filter added here)
     const subjectCells = Array.from(classCells); // All cells excluding time
     subjectCells.forEach((cell) => {
       const subjectDivs = cell.querySelectorAll(".item-div"); // All subject divs in the cell
@@ -175,10 +245,20 @@ function applyFilters() {
 
       // Loop through all subjects in the cell and only show the matching subject
       subjectDivs.forEach((subjectDiv) => {
-        const subjectText = subjectDiv.textContent;
+        const subjectInstructor = subjectDiv.querySelector(
+          ".subject-instructor"
+        ); // Find the instructor for this item
+        const instructorText = subjectInstructor
+          ? subjectInstructor.textContent
+          : "";
 
-        if (filterClass === "all" || subjectText.includes(filterClass)) {
-          subjectDiv.style.display = ""; // Show this subject if it matches
+        if (
+          (filterInstructor === "all" ||
+            instructorText.includes(filterInstructor)) &&
+          (filterClass === "all" ||
+            subjectDiv.textContent.includes(filterClass))
+        ) {
+          subjectDiv.style.display = ""; // Show this subject if it matches instructor and class
           anySubjectVisible = true; // Mark that we have at least one matching subject
         } else {
           subjectDiv.style.display = "none"; // Hide this subject if it doesn't match
@@ -193,7 +273,7 @@ function applyFilters() {
       }
     });
 
-    // Loop through each day cell in the row and check if it contains content for the selected day
+    // Apply the filter by day (already implemented correctly)
     classCells.forEach((cell, index) => {
       const dayName = headerCells[index + 1].getAttribute("data-day"); // Get the day name from the header
       if (filterDay !== "all" && dayName !== filterDay) {
@@ -207,7 +287,8 @@ function applyFilters() {
     showRow =
       showRow &&
       classCells.some(
-        (cell) => cell.style.display === "" && cell.textContent.trim() !== ""
+        (cell) =>
+          cell.style.display !== "none" && cell.textContent.trim() !== ""
       );
 
     row.style.display = showRow ? "table-row" : "none";
@@ -268,6 +349,12 @@ function getSelectedDays() {
   );
   return Array.from(days).map((day) => day.value);
 }
+function getSelectededitDays() {
+  const days = document.querySelectorAll(
+    '#edit-days input[type="checkbox"]:checked'
+  );
+  return Array.from(days).map((day) => day.value);
+}
 
 function isSubjectExisting(startTime, endTime, salle) {
   // Check if there is already a subject scheduled for the same time and salle
@@ -303,42 +390,169 @@ function addTimetableEntry(
     }
   });
 
-  // Add the subject entry to the timetable if not already present
   if (rowExists) {
     selectedDays.forEach((day) => {
       const dayIndex = getDayIndex(day);
       const cellContent = targetRow.cells[dayIndex].innerHTML;
-      if (cellContent) {
+
+      if (!cellContent.includes(salle)) {
+        // Avoid inserting duplicates
+        const uniqueID = `item-${subject}-${salle}-${startTime}-${endTime}-${day}-${Date.now()}`;
         targetRow.cells[
           dayIndex
-        ].innerHTML += `<br><div class="item-div ${groupBackgroundColor}"><label class="subject-name">${subject} (${instructor})</label><br><label class="subject-salle"> ${salle}</label></div>`;
-      } else {
-        targetRow.cells[
-          dayIndex
-        ].innerHTML = `<div class="item-div ${groupBackgroundColor}"><label class="subject-name">${subject} (${instructor})</label> <br><label class="subject-salle"> ${salle}</label></div>`;
+        ].innerHTML += `<div id="${uniqueID}" class="item-div ${groupBackgroundColor}">
+            <div class="name"><label class="subject-name">${subject}</label><label class="subject-instructor">(${instructor})</label></div>
+            <label class="subject-salle">${salle}</label></div>`;
       }
     });
+    addclassToFilter(subject);
+    addinstructorToFilter(instructor);
+    // Attach click event listener for opening edit modal
+    // Reattach event listeners after adding or editing subjects
+    attachEditModalListeners();
   } else {
     const newRow = document.createElement("tr");
     newRow.innerHTML = `<td class="case-time">${startTime} - ${endTime}</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>`;
 
     selectedDays.forEach((day) => {
       const dayIndex = getDayIndex(day);
+      const uniqueID = `item-${subject}-${salle}-${startTime}-${endTime}-${day}-${Date.now()}`;
       newRow.cells[
         dayIndex
-      ].innerHTML = `<div class="item-div ${groupBackgroundColor}"><label class="subject-name">${subject}  (${instructor})</label> <label class="subject-salle">${salle}</label></div>`;
+      ].innerHTML = `<div id="${uniqueID}" class="item-div ${groupBackgroundColor}"><div class="name" ><label class="subject-name">${subject}</label><label class="subject-instructor">(${instructor})</label></div> <label class="subject-salle">${salle}</label></div>`;
     });
 
     insertSortedRow(newRow, startTime, timetableBody);
+    addclassToFilter(subject);
+    addinstructorToFilter(instructor);
+
+    // Attach click event listener for opening edit modal
+    // Reattach event listeners after adding or editing subjects
+    attachEditModalListeners();
   }
 
-  // Add the time to the filter if not already present
-  addTimeToFilter(startTime, endTime);
-  // Add the time to the filter if not already present
-  addclassToFilter(subject);
+  function attachEditModalListeners() {
+    // Add the time to the filter if not already present
+    addTimeToFilter(startTime, endTime);
+    // Add the time to the filter if not already present
 
-  // Store the subject entry in existingSubjects
-  existingSubjects.push({ startTime, endTime, salle });
+    // Store the subject entry in existingSubjects
+    existingSubjects.push({ startTime, endTime, salle });
+  }
+
+  document.querySelectorAll(".item-div").forEach((item) => {
+    item.addEventListener("click", function () {
+      console.log(item.id);
+      selectedItem = item; // Set the selected item to the clicked div
+      const subjectName = item.querySelector(".subject-name").textContent;
+      const subjectSalle = item.querySelector(".subject-salle").textContent;
+
+      // Fill the modal inputs
+      document.getElementById("subject").value = subjectName;
+      document.getElementById("salle").value = subjectSalle;
+
+      // Display the "Edit Modal"
+      document.getElementById("modaledit").style.display = "flex";
+    });
+  });
+
+  // Handle Delete Button click to remove the selected item
+  document
+    .getElementById("delete-button")
+    .addEventListener("click", function () {
+      if (!selectedItem) return; // No item selected
+
+      // Remove the selected item from the timetable
+      selectedItem.remove();
+
+      // Close the edit modal
+      document.getElementById("modaledit").style.display = "none";
+    });
+
+  // Handle Edit Button click to update the selected item
+  document.getElementById("edit-button").addEventListener("click", function () {
+    if (!selectedItem) return; // No item selected
+
+    // Populate the edit modal fields
+    document.getElementById("edit-start-time").value = ""; // Set this to current start time
+    document.getElementById("edit-end-time").value = ""; // Set this to current end time
+    // Reset checkboxes
+    document
+      .querySelectorAll("#edit-days input[type='checkbox']")
+      .forEach((checkbox) => {
+        checkbox.checked = false; // Reset all checkboxes
+      });
+    const subjectName = selectedItem.querySelector(".subject-name").textContent;
+    const subjectSalle =
+      selectedItem.querySelector(".subject-salle").textContent;
+    const subjectinstructor = selectedItem.querySelector(
+      ".subject-instructor"
+    ).textContent;
+    document.getElementById("subjet-edit-name").textContent = subjectName;
+    document.getElementById("subjet-edit-salle").textContent = subjectSalle;
+    // Close the edit modal
+    document.getElementById("modaledit").style.display = "none";
+    document.getElementById("modaleditsubject").style.display = "grid";
+  });
+
+  // Cancel button functionality
+  document
+    .getElementById("cancel-edit-button")
+    .addEventListener("click", function () {
+      document.getElementById("modaleditsubject").style.display = "none"; // Close edit modal without saving
+    });
+  document
+    .getElementById("save-edit-button")
+    .addEventListener("click", function () {
+      if (!selectedItem) return; // No item selected
+
+      // Get the new values from the edit modal
+      const subjectName = document.getElementById("subject").value;
+      const subjectSalle = document.getElementById("edit-salle").value;
+      const startTime = document.getElementById("edit-start-time").value;
+      const endTime = document.getElementById("edit-end-time").value;
+      const selectedDays = getSelectededitDays();
+
+      // Ensure the subject is valid before proceeding
+      if (
+        subjectName &&
+        subjectSalle &&
+        startTime &&
+        endTime &&
+        selectedDays.length > 0
+      ) {
+        // Check if the start time is later than the end time
+        if (startTime >= endTime) {
+          alert("Start time cannot be later than or equal to the end time.");
+          return; // Stop form submission
+        }
+        // Check if the subject already exists for the same time and salle
+        if (isSubjectExisting(startTime, endTime, subjectSalle)) {
+          alert(
+            "This subject is already scheduled at the same time and salle."
+          );
+          return; // Stop form submission
+        }
+
+        // Remove the old subject (selected item)
+        selectedItem.remove();
+
+        // Add the new subject with the updated time and days
+        addTimetableEntry(
+          subjectName,
+          document.getElementById("instructor").value, // Assuming instructor is also updated
+          subjectSalle,
+          startTime,
+          endTime,
+          selectedDays
+        );
+
+        // Close the edit modal after saving
+        document.getElementById("modaleditsubject").style.display = "none";
+      } else {
+        alert("Please fill in all the fields.");
+      }
+    });
 }
 
 function addTimeToFilter(startTime, endTime) {
@@ -384,6 +598,28 @@ function addclassToFilter(subject) {
     newOption.value = subjectOption;
     newOption.textContent = subjectOption;
     filterclass.appendChild(newOption);
+  }
+}
+function addinstructorToFilter(instructor) {
+  const filterinstructor = document.getElementById("filter-instructor");
+
+  // Create a new time option
+  const instructorOption = `${instructor}`;
+
+  // Check if the option already exists
+  let optionExists = false;
+  Array.from(filterinstructor.options).forEach((option) => {
+    if (option.value === instructorOption) {
+      optionExists = true;
+    }
+  });
+
+  // If the time doesn't exist, add it as a new option
+  if (!optionExists) {
+    const newOption = document.createElement("option");
+    newOption.value = instructorOption;
+    newOption.textContent = instructorOption;
+    filterinstructor.appendChild(newOption);
   }
 }
 
