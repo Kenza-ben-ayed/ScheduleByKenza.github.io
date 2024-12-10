@@ -313,9 +313,9 @@ document
       alert("Start time cannot be later than or equal to the end time.");
       return; // Stop form submission
     }
-
+    console.log(selectedDays, " salle : ", salle, " date ", startTime, endTime);
     // Check if the subject already exists for the same time and salle
-    if (isSubjectExisting(startTime, endTime, salle)) {
+    if (isSubjectExisting(startTime, endTime, salle, selectedDays)) {
       alert("This subject is already scheduled at the same time and salle.");
       return; // Stop form submission
     }
@@ -356,14 +356,35 @@ function getSelectededitDays() {
   return Array.from(days).map((day) => day.value);
 }
 
-function isSubjectExisting(startTime, endTime, salle) {
-  // Check if there is already a subject scheduled for the same time and salle
-  return existingSubjects.some(
-    (entry) =>
+function isSubjectExisting(startTime, endTime, salle, selectedDays) {
+  // Ensure existingSubjects is an array
+  if (!Array.isArray(existingSubjects)) {
+    console.error("existingSubjects is not an array");
+    return false; // Return false to avoid errors
+  }
+
+  // Check if there is already a subject scheduled for the same time, salle, and days
+  return existingSubjects.some((entry) => {
+    // Ensure entry.selectedDays is an array
+    if (!Array.isArray(entry.selectedDays) || entry.selectedDays.length === 0) {
+      console.error(
+        "entry.selectedDays is not a valid array:",
+        entry.selectedDays
+      );
+      return false; // Skip this entry if it's invalid
+    }
+
+    // Check for overlap in the selected days
+    const daysOverlap = entry.selectedDays.some((day) =>
+      selectedDays.includes(day)
+    );
+    return (
       entry.startTime === startTime &&
       entry.endTime === endTime &&
-      entry.salle === salle
-  );
+      entry.salle === salle &&
+      daysOverlap // Check if there's any overlap in the selected days
+    );
+  });
 }
 
 function addTimetableEntry(
@@ -507,27 +528,34 @@ function addTimetableEntry(
       if (!selectedItem) return; // No item selected
 
       // Get the new values from the edit modal
-      const subjectName = document.getElementById("subject").value;
-      const subjectSalle = document.getElementById("edit-salle").value;
-      const startTime = document.getElementById("edit-start-time").value;
-      const endTime = document.getElementById("edit-end-time").value;
-      const selectedDays = getSelectededitDays();
+      const subjectNameedit = document.getElementById("subject").value;
+      const subjectSalleedit = document.getElementById("edit-salle").value;
+      const startTimeedit = document.getElementById("edit-start-time").value;
+      const endTimeedit = document.getElementById("edit-end-time").value;
+      const selectedDaysedit = getSelectededitDays();
 
       // Ensure the subject is valid before proceeding
       if (
-        subjectName &&
-        subjectSalle &&
-        startTime &&
-        endTime &&
-        selectedDays.length > 0
+        subjectNameedit &&
+        subjectSalleedit &&
+        startTimeedit &&
+        endTimeedit &&
+        selectedDaysedit.length > 0
       ) {
         // Check if the start time is later than the end time
-        if (startTime >= endTime) {
+        if (startTimeedit >= endTimeedit) {
           alert("Start time cannot be later than or equal to the end time.");
           return; // Stop form submission
         }
         // Check if the subject already exists for the same time and salle
-        if (isSubjectExisting(startTime, endTime, subjectSalle)) {
+        if (
+          isSubjectExisting(
+            startTimeedit,
+            endTimeedit,
+            subjectSalleedit,
+            selectedDaysedit
+          )
+        ) {
           alert(
             "This subject is already scheduled at the same time and salle."
           );
@@ -539,12 +567,12 @@ function addTimetableEntry(
 
         // Add the new subject with the updated time and days
         addTimetableEntry(
-          subjectName,
+          subjectNameedit,
           document.getElementById("instructor").value, // Assuming instructor is also updated
-          subjectSalle,
-          startTime,
-          endTime,
-          selectedDays
+          subjectSalleedit,
+          startTimeedit,
+          endTimeedit,
+          selectedDaysedit
         );
 
         // Close the edit modal after saving
